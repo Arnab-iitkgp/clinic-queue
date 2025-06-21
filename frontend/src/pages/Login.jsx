@@ -1,35 +1,38 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../store/slices/authSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
- const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post("http://localhost:5000/api/auth/login", {
-      email,
-      password,
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ Dispatch login to Redux
+      dispatch(login({ user: res.data.user, token: res.data.token }));
 
-    if (res.data.user.role === "receptionist") {
-      navigate("/receptionist");
-    } else if (res.data.user.role === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      alert("Unknown user role");
+      // ✅ Navigate based on role
+      if (res.data.user.role === "receptionist") {
+        navigate("/receptionist");
+      } else if (res.data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        alert("Unknown user role");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
     }
-  } catch (err) {
-    alert(err.response?.data?.message || "Login failed");
-  }
-};
-
+  };
 
   return (
     <div className="from-slate-50 to-slate-200 flex items-center justify-center px-4 py-16">
@@ -39,7 +42,6 @@ export default function Login() {
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
-          {/* Email Input */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Email address
@@ -54,7 +56,6 @@ export default function Login() {
             />
           </div>
 
-          {/* Password Input */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Password
@@ -69,7 +70,6 @@ export default function Login() {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2.5 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition duration-200"
@@ -78,7 +78,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Extra Links */}
         <div className="mt-6 text-sm text-slate-600 text-center space-y-2">
           <p>
             Are you an admin?{" "}

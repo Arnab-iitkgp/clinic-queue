@@ -12,7 +12,7 @@ const getCurrentToken = async (req, res) => {
   }
 };
 
-// 👉 Create a new token
+//  Create a new token
 const createToken = async (req, res) => {
   try {
     const { name } = req.body;

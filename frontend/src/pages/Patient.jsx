@@ -1,79 +1,74 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import axios from "axios";
+import {
+  fetchQueueState,
+  setCurrentToken,
+} from "../store/slices/queueSlice";
 
 const socket = io("http://localhost:5000");
 
 export default function Patient() {
+  const dispatch = useDispatch();
+  const { currentToken, upcomingTokens } = useSelector((state) => state.queue);
+
   const [myToken, setMyToken] = useState(null);
-  const [currentToken, setCurrentToken] = useState(null);
-  const [waitingTokens, setWaitingTokens] = useState([]);
   const [name, setName] = useState("");
+
+  // // 🧠 Restore token from localStorage (optional for real-life usage)
+  // useEffect(() => {
+  //   const saved = localStorage.getItem("myToken");
+  //   if (saved) setMyToken(Number(saved));
+  // }, []);
+
+  // // 💾 Persist token in localStorage (optional for real-life usage)
+  // useEffect(() => {
+  //   if (myToken !== null) {
+  //     localStorage.setItem("myToken", myToken);
+  //   }
+  // }, [myToken]);
+
   const handleJoinQueue = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/token", { name });
-      setMyToken(res.data.number);
-      fetchWaitingTokens();
+      const res = await fetch("http://localhost:5000/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+
+      const data = await res.json();
+      setMyToken(data.number);
+      dispatch(fetchQueueState());
     } catch (err) {
       alert("❌ Could not join the queue. Try again.");
     }
   };
 
-  const fetchWaitingTokens = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/token/waiting");
-      const tokens = res.data.map((t) => t.number);
-      console.log("📋 Waiting tokens:", tokens);
-      setWaitingTokens(tokens);
-    } catch (err) {
-      console.error("Error fetching waiting tokens");
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const waiting = await axios.get(
-          "http://localhost:5000/api/token/waiting"
-        );
-        setWaitingTokens(waiting.data.map((t) => t.number));
-      } catch (err) {
-        console.log("Error fetching waiting tokens");
-      }
-
-      try {
-        const current = await axios.get(
-          "http://localhost:5000/api/token/current"
-        );
-        setCurrentToken(current.data.number);
-      } catch (err) {
-        console.log("No token called yet.");
-      }
-    };
-
-    fetchData();
+    dispatch(fetchQueueState());
 
     socket.on("connect", () => {
       console.log("🧍 Patient connected:", socket.id);
     });
 
     socket.on("tokenCalled", (data) => {
-      setCurrentToken(data.number);
-      fetchData(); // refresh queue too
+      dispatch(setCurrentToken(data)); // full object
+      dispatch(fetchQueueState());
     });
 
     return () => {
       socket.off("connect");
       socket.off("tokenCalled");
     };
-  }, []);
+  }, [dispatch]);
 
   const getStatus = () => {
-    if (!myToken || !currentToken) return "⏳ Waiting for updates...";
-    if (myToken === currentToken) return "✅ It's your turn now!";
-    if (currentToken > myToken) return "🟢 You were already served.";
+    if (!myToken || !currentToken?.number) return "⏳ Waiting for updates...";
+    if (myToken === currentToken.number) return "✅ It's your turn now!";
+    if (currentToken.number > myToken) return "🟢 You were already served.";
 
-    const index = waitingTokens.indexOf(myToken);
+    const numbers = upcomingTokens.map((t) => t.number);
+    const index = numbers.indexOf(myToken);
     return index === -1
       ? "🔄 Waiting for your token to be added..."
       : `⌛ ${index} people ahead of you.`;
@@ -109,7 +104,7 @@ export default function Patient() {
           <div className="text-xl mb-2">
             📢 Current Token:{" "}
             <span className="font-semibold text-blue-600">
-              {currentToken || "Loading..."}
+              {currentToken?.number ?? "Loading..."}
             </span>
           </div>
           <div className="text-lg mt-4 text-gray-700">{getStatus()}</div>

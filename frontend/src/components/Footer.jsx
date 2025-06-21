@@ -14,7 +14,7 @@ export default function Footer() {
         {/* Right: Social Links with Icons */}
         <div className="flex gap-5 text-lg">
           <a
-            href="https://github.com/your-github" // 🔁 Replace this
+            href="https://github.com/Arnab-iitkgp" // 
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-indigo-600 transition flex items-center gap-1"
@@ -22,13 +22,13 @@ export default function Footer() {
             <FaGithub /> GitHub
           </a>
           <a
-            href="mailto:your-email@gmail.com" // 🔁 Replace this
+            href="mailto:mrarnab7475@gmail.com" 
             className="hover:text-indigo-600 transition flex items-center gap-1"
           >
             <HiOutlineMail /> Gmail
           </a>
           <a
-            href="https://www.linkedin.com/in/your-linkedin" // 🔁 Replace this
+            href="https://www.linkedin.com/in/Arnab-dev" 
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-indigo-600 transition flex items-center gap-1"

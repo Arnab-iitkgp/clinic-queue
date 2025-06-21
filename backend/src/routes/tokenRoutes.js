@@ -12,7 +12,7 @@ const authorize = require('../middlewares/authorize');
 // console.log("✅ tokenRoutes.js loaded");
 
 
-// ❌ Public — Patients can generate token without login
+//  Public — Patients can generate token without login
 router.post('/token', createToken);
 
 // ✅ Optional auth — current token is public

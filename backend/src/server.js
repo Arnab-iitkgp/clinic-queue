@@ -2,8 +2,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const http = require('http'); // ⬅️ required for socket.io
-const { Server } = require('socket.io'); // ⬅️ socket.io
+const http = require('http'); 
+const { Server } = require('socket.io'); 
 const connectDB = require('./utils/db');
 const tokenRoutes = require('./routes/tokenRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -11,10 +11,10 @@ const receptionistRoutes = require("./routes/receptionistRoute");
 
 
 const app = express();
-const server = http.createServer(app); // ⬅️ wrap express with http
+const server = http.createServer(app); 
 const io = new Server(server, {
   cors: {
-    origin: "*", // for dev only; restrict later
+    origin: "*", // Restrict later
     methods: ["GET", "POST"]
   }
 });

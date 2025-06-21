@@ -1,15 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../store/slices/authSlice"; // 👈 import Redux action
 
 export default function Signup() {
   const [name, setName] = useState("");
   const [clinicName, setClinicName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminKey, setAdminKey] = useState('');
+  const [adminKey, setAdminKey] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // 👈 use Redux dispatch
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -19,11 +22,13 @@ export default function Signup() {
         clinicName,
         email,
         password,
-        adminKey
+        adminKey,
       });
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ Use Redux login to store user + token
+      dispatch(login({ user: res.data.user, token: res.data.token }));
+
+      // ✅ Redirect
       navigate("/admin/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
@@ -61,7 +66,6 @@ export default function Signup() {
             onChange={(e) => setAdminKey(e.target.value)}
             required
           />
-
           <input
             type="email"
             placeholder="Email"

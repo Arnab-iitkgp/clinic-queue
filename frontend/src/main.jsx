@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App";
@@ -11,10 +12,12 @@ import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import Layout from "./components/Layout";
+import { store } from "./store";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+        <Provider store={store}>
     <BrowserRouter>
     <Layout>
       <Routes>
@@ -22,7 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
-        {/* ✅ Admin dashboard protected */}
+      {/* Protected Admin Dashboard */}
         <Route
           path="/admin/dashboard"
           element={
@@ -31,13 +34,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             </ProtectedRoute>
           }
         />
-
-        {/* ✅ You can protect these later similarly */}
         <Route path="/receptionist" element={<Receptionist />} />
         <Route path="/patient" element={<Patient />} />
         <Route path="/display" element={<Display />} />
       </Routes>
       </Layout>
     </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
