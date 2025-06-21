@@ -9,7 +9,7 @@ import {
   resetQueue as resetQueueState,
 } from "../store/slices/queueSlice";
 
-const socket = io("http://localhost:5000");
+const socket = io(import.meta.env.VITE_SOCKET_BASE);
 
 export default function Receptionist() {
   const dispatch = useDispatch();
@@ -32,7 +32,7 @@ export default function Receptionist() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/token/call",
+        `${import.meta.env.VITE_API_BASE}/api/token/call`,
         {},
         authHeaders
       );
@@ -50,7 +50,7 @@ export default function Receptionist() {
     if (!confirmReset) return;
 
     try {
-      await axios.delete("http://localhost:5000/api/token/reset", authHeaders);
+      await axios.delete(`${import.meta.env.VITE_API_BASE}/token/reset`, authHeaders);
       dispatch(resetQueueState());
       toast.success("🧹 Queue has been reset");
     } catch (err) {
@@ -103,7 +103,7 @@ export default function Receptionist() {
         }`}
         disabled={loading}
       >
-        {loading ? "Calling..." : "📞 Call Next Token"}
+        {loading ? "Calling..." : "📞 Call Next Patient"}
       </button>
 
       {userRole === "admin" && (

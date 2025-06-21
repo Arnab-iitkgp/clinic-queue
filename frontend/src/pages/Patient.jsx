@@ -6,7 +6,7 @@ import {
   setCurrentToken,
 } from "../store/slices/queueSlice";
 
-const socket = io("http://localhost:5000");
+const socket = io(import.meta.env.VITE_SOCKET_BASE);
 
 export default function Patient() {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function Patient() {
 
   const handleJoinQueue = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/token", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),

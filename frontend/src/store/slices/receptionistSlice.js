@@ -7,7 +7,7 @@ export const fetchReceptionists = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/receptionists", {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/receptionists`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data;
@@ -22,7 +22,7 @@ export const createReceptionist = createAsyncThunk(
   async (form, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://localhost:5000/api/receptionists", form, {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE}/api/receptionists`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data.user;
@@ -37,7 +37,7 @@ export const deleteReceptionist = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/receptionists/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE}/api/receptionists/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return id;

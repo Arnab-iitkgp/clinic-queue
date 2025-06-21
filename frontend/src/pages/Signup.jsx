@@ -17,7 +17,7 @@ export default function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE}/api/auth/signup`, {
         name,
         clinicName,
         email,

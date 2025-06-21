@@ -16,7 +16,7 @@ export const fetchQueueState = createAsyncThunk("queue/fetch", async (_, thunkAP
 
     // Try fetching the current token, but gracefully handle 404 (no token yet)
     try {
-      const res = await axios.get("http://localhost:5000/api/token/current");
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/token/current`);
       current = res.data || null;
     } catch (err) {
       if (err.response?.status !== 404) {
@@ -26,7 +26,7 @@ export const fetchQueueState = createAsyncThunk("queue/fetch", async (_, thunkAP
 
     // Always try fetching waiting tokens (protected route)
     const waiting = await axios.get(
-      "http://localhost:5000/api/token/waiting",
+      `${import.meta.env.VITE_API_BASE}/api/token/waiting`,
       getAuthHeaders()
     );
 

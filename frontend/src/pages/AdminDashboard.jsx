@@ -58,7 +58,6 @@ export default function AdminDashboard() {
             >
               Receptionist Portal
             </Link>
-            <LogoutButton />
           </div>
         </div>
 
