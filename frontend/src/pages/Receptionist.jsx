@@ -50,7 +50,7 @@ export default function Receptionist() {
     if (!confirmReset) return;
 
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE}/token/reset`, authHeaders);
+      await axios.delete(`${import.meta.env.VITE_API_BASE}/api/token/reset`, authHeaders);
       dispatch(resetQueueState());
       toast.success("🧹 Queue has been reset");
     } catch (err) {
