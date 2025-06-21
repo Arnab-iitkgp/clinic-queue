@@ -7,7 +7,7 @@ import App from "./App";
 import Receptionist from "./pages/Receptionist";
 import Patient from "./pages/Patient";
 import Display from "./pages/Display";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; 
